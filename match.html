@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Predictor Pro - Bet261</title>
+    <style>
+        :root { --gold: #f0b90b; --bg: #0b0e11; --card: #1e2329; --green: #00ff00; }
+        body { background: var(--bg); color: white; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 10px; }
+        
+        /* Écran de Verrouillage */
+        #lock { position: fixed; inset: 0; background: var(--bg); z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+        .lock-box { background: var(--card); padding: 30px; border-radius: 20px; border: 1px solid var(--gold); text-align: center; width: 80%; max-width: 300px; }
+        
+        /* Application Principale */
+        .container { max-width: 450px; margin: auto; display: none; }
+        .header { background: var(--card); padding: 20px; border-radius: 15px; border-bottom: 3px solid var(--gold); margin-bottom: 20px; }
+        .match-card { background: var(--card); border-radius: 15px; padding: 15px; margin-bottom: 15px; border-left: 5px solid var(--gold); animation: fadeIn 0.5s ease; }
+        
+        /* Éléments de Prédiction */
+        .score-badge { background: #000; color: var(--gold); padding: 5px 10px; border-radius: 8px; font-weight: bold; font-size: 18px; display: inline-block; margin: 10px 0; }
+        .chance-container { background: #333; height: 8px; border-radius: 4px; margin: 10px 0; overflow: hidden; }
+        .chance-bar { height: 100%; background: linear-gradient(90deg, #f02d7d, var(--green)); transition: width 1s ease; }
+        
+        input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 8px; border: 1px solid #444; background: #000; color: #fff; box-sizing: border-box; }
+        .btn { width: 100%; padding: 15px; background: var(--gold); border: none; border-radius: 10px; font-weight: bold; cursor: pointer; color: #000; font-size: 16px; }
+        
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+
+    <div id="lock">
+        <div class="lock-box">
+            <h2 style="color:var(--gold)">ADALABE ACCESS</h2>
+            <p style="font-size: 12px; color: #888;">Entrez le mot de passe de l'IA</p>
+            <input type="password" id="pass" placeholder="Mot de passe">
+            <button class="btn" onclick="checkPass()">DÉVERROUILLER</button>
+        </div>
+    </div>
+
+    <div id="app" class="container">
+        <div class="header">
+            <h2 style="margin:0; color:var(--gold)">PREDICTOR AI v3.0</h2>
+            <div id="current-date" style="font-size: 12px; color:#888;"></div>
+        </div>
+
+        <div id="results">
+            <p style="color:#666;">Cliquez sur Analyser pour les matchs du jour...</p>
+        </div>
+
+        <button class="btn" onclick="generateProPredictions()">ANALYSER LES MATCHS ASSURÉS</button>
+        
+        <p style="font-size: 10px; color: #444; margin-top: 20px;">Système de Prédictologie Sportive © 2026</p>
+    </div>
+
+    <script>
+        // Sécurité
+        function checkPass() {
+            const p = document.getElementById('pass').value;
+            if(p === 'adalabe') {
+                document.getElementById('lock').style.display = 'none';
+                document.getElementById('app').style.display = 'block';
+                document.getElementById('current-date').innerText = new Date().toLocaleDateString('fr-FR', {weekday:'long', day:'numeric', month:'long'});
+            } else {
+                alert("Accès refusé !");
+            }
+        }
+
+        // Algorithme de Matchs
+        const matchData = [
+            { t1: "Real Madrid", t2: "Getafe", prono: "Victoire 1", score: "3 - 0", chance: 98 },
+            { t1: "
