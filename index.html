@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ADALABE AI - GAMER EDITION</title>
+    <title>ADALABE AI - TIME SCANNER</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     <style>
         :root { 
@@ -14,17 +14,13 @@
 
         body { 
             background: var(--bg); 
-            background-image: 
-                linear-gradient(rgba(0, 210, 255, 0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 210, 255, 0.03) 1px, transparent 1px);
-            background-size: 25px 25px;
+            background-image: radial-gradient(circle at center, #1a0b16 0%, #05070a 100%);
             color: white; font-family: 'Rajdhani', sans-serif; 
             margin: 0; padding: 10px; display: flex; justify-content: center; min-height: 100vh;
         }
 
-        .container { max-width: 420px; width: 100%; display: none; animation: fadeIn 0.5s ease-in-out; }
+        .container { max-width: 420px; width: 100%; display: none; animation: fadeIn 0.5s ease; }
 
-        /* HEADER */
         .header { 
             display: flex; justify-content: space-between; align-items: center;
             background: rgba(255, 255, 255, 0.05); padding: 12px;
@@ -32,99 +28,89 @@
         }
         .clock-live { font-family: 'Orbitron'; font-size: 20px; color: var(--blue); text-shadow: 0 0 10px var(--blue); }
 
-        /* ONGLETS */
         .tabs { display: flex; gap: 10px; margin-bottom: 20px; }
         .tab-btn { 
             flex: 1; padding: 14px; border: none; font-family: 'Orbitron'; font-size: 11px;
             cursor: pointer; background: #1e2329; color: #666; font-weight: bold;
             clip-path: polygon(10% 0, 100% 0, 90% 100%, 0% 100%); transition: 0.3s;
         }
-        .tab-btn.active { background: var(--pink); color: white; box-shadow: var(--shadow); transform: scale(1.05); }
+        .tab-btn.active { background: var(--pink); color: white; box-shadow: var(--shadow); }
 
-        /* SECTIONS CARD */
         .section { 
             background: var(--card); border-radius: 20px; padding: 30px; 
             border: 1px solid #2a2f3a; position: relative; display: none;
             box-shadow: 0 20px 40px rgba(0,0,0,0.6);
         }
         .section.active { display: block; }
-        .section::after { content: "SYS_ACTIVE"; position: absolute; top: 10px; right: 20px; font-size: 8px; color: var(--gold); font-family: 'Orbitron'; }
 
-        /* MULTIPLICATEUR COSMOX */
+        /* BOX PREDICTION */
         .prediction-box { 
             background: rgba(0,0,0,0.4); border: 1px solid rgba(255, 0, 127, 0.3);
-            border-radius: 15px; margin: 20px 0; padding: 20px;
+            border-radius: 15px; margin: 15px 0; padding: 20px;
         }
         .prediction-val { 
-            font-family: 'Orbitron'; font-size: 65px; font-weight: bold; 
-            color: var(--pink); text-shadow: var(--shadow); margin: 10px 0;
-            animation: pulse 2s infinite;
+            font-family: 'Orbitron'; font-size: 55px; font-weight: bold; 
+            color: var(--pink); text-shadow: var(--shadow); margin: 5px 0;
+        }
+        .target-time {
+            font-family: 'Orbitron'; font-size: 18px; color: var(--green);
+            background: rgba(0, 255, 136, 0.1); padding: 10px; border-radius: 8px;
+            margin-top: 10px; border: 1px dashed var(--green);
         }
 
-        /* BOUTONS STYLÉS */
         .btn { 
             width: 100%; padding: 18px; border: none; border-radius: 8px; 
             font-family: 'Orbitron'; font-weight: bold; cursor: pointer; 
-            font-size: 14px; margin-top: 10px; text-transform: uppercase;
-            transition: 0.2s; position: relative; overflow: hidden;
+            font-size: 14px; margin-top: 10px; text-transform: uppercase; transition: 0.2s;
         }
         .btn-pink { background: var(--pink); color: white; box-shadow: var(--shadow); }
-        .btn-blue { background: var(--blue); color: black; box-shadow: 0 0 15px rgba(0, 210, 255, 0.4); }
-        .btn:active { transform: scale(0.95); filter: brightness(1.2); }
+        .btn-blue { background: var(--blue); color: black; }
 
-        /* INPUTS */
         input { 
             width: 100%; padding: 15px; margin-bottom: 15px; border-radius: 10px;
             border: 1px solid #333; background: #000; color: var(--green);
             font-family: 'Orbitron'; text-align: center; font-size: 16px; box-sizing: border-box;
         }
 
-        .winner-box { 
-            margin-top: 20px; padding: 20px; background: rgba(0,210,255,0.05); 
-            border-radius: 10px; border-left: 4px solid var(--green); text-align: left;
-        }
-
-        /* LOCK SCREEN */
         #lock { position: fixed; inset: 0; background: var(--bg); z-index: 9999; display: flex; justify-content: center; align-items: center; }
-        .lock-panel { background: var(--card); padding: 40px; border-radius: 25px; border: 1px solid var(--gold); text-align: center; width: 85%; max-width: 350px; }
-
-        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.7; } 100% { opacity: 1; } }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
     <div id="lock">
-        <div class="lock-panel">
-            <h2 style="color:var(--gold); font-family:'Orbitron'; font-size: 14px; letter-spacing: 2px;">SECURE ACCESS</h2>
-            <input type="password" id="pass" placeholder="PASSWORD">
-            <button class="btn btn-pink" style="background:var(--gold); color:black;" onclick="unlock()">INITIALISER HUD</button>
+        <div style="background:var(--card); padding:40px; border-radius:25px; border:1px solid var(--gold); text-align:center; width:85%; max-width:350px;">
+            <h2 style="color:var(--gold); font-family:'Orbitron'; font-size: 14px;">SYSTEM AUTHENTICATION</h2>
+            <input type="password" id="pass" placeholder="ACCESS CODE">
+            <button class="btn btn-pink" style="background:var(--gold); color:black;" onclick="unlock()">LOGIN</button>
         </div>
     </div>
 
     <div id="app" class="container">
         <div class="header">
-            <div style="font-size: 10px; color: var(--gold); font-family: 'Orbitron';">ADALABE AI V5.0</div>
+            <div style="font-size: 10px; color: var(--gold); font-family: 'Orbitron';">ADALABE PRO V6</div>
             <div class="clock-live" id="clock">00:00:00</div>
         </div>
         
         <div class="tabs">
-            <button class="tab-btn active" id="tab1" onclick="switchTab(1)">COSMOX (TIME)</button>
-            <button class="tab-btn" id="tab2" onclick="switchTab(2)">FOOT (SCAN)</button>
+            <button class="tab-btn active" id="tab1" onclick="switchTab(1)">COSMOX AI</button>
+            <button class="tab-btn" id="tab2" onclick="switchTab(2)">FOOT SCAN</button>
         </div>
 
         <div id="sec1" class="section active">
-            <p style="font-size: 10px; color: #888; font-family: 'Orbitron'; margin: 0;">CYCLE TEMPOREL ACTUEL</p>
+            <p style="font-size: 11px; color: #888; font-family: 'Orbitron'; margin: 0;">ANALYSE DU CYCLE PROCHAIN</p>
             <div class="prediction-box">
-                <div id="status" style="font-size:9px; color:var(--gold); letter-spacing: 1px;">EN ATTENTE DU SIGNAL...</div>
+                <div id="status" style="font-size:10px; color:var(--gold); margin-bottom:10px;">PRÊT POUR LE SCAN</div>
                 <div class="prediction-val" id="cosmo-val">--.--x</div>
+                <div id="target-display" style="display:none;">
+                    <div style="font-size:10px; color:#fff; margin-bottom:5px;">HEURE DE PARI CONSEILLÉE :</div>
+                    <div class="target-time" id="target-val">00:00:00</div>
+                </div>
             </div>
-            <button class="btn btn-pink" onclick="predictCosmo()">GÉNÉRER PAR TEMPS</button>
-            <p style="font-size:10px; color:#555; margin-top:15px; font-weight:bold;">BASÉ SUR LES MINUTES ET SECONDES DU TOUR</p>
+            <button class="btn btn-pink" onclick="predictCosmo()">GÉNÉRER SIGNAL + HEURE</button>
         </div>
 
         <div id="sec2" class="section">
-            <p style="font-size: 10px; color: var(--blue); font-family: 'Orbitron'; margin: 0 0 15px 0;">BET261 DATABASE SCANNER</p>
             <input type="text" id="foot-input" placeholder="ÉQUIPE 1 VS ÉQUIPE 2">
             <button class="btn btn-blue" onclick="predictFoot()">DÉDUIRE GAGNANT</button>
             <div id="foot-res"></div>
@@ -132,7 +118,6 @@
     </div>
 
     <script>
-        // Mise à jour Horloge
         setInterval(() => {
             document.getElementById('clock').innerText = new Date().toLocaleTimeString('fr-FR');
         }, 1000);
@@ -141,7 +126,7 @@
             if(document.getElementById('pass').value.toLowerCase().trim() === 'adalabe') {
                 document.getElementById('lock').style.display = 'none';
                 document.getElementById('app').style.display = 'block';
-            } else { alert("ACCÈS REFUSÉ"); }
+            } else { alert("CODE INCORRECT"); }
         }
 
         function switchTab(n) {
@@ -151,53 +136,60 @@
             document.getElementById('sec'+n).classList.add('active');
         }
 
-        // --- ALGORITHME COSMOX (BASÉ SUR MINUTES + SECONDES) ---
+        // --- ALGORITHME TEMPOREL AVANCÉ ---
         function predictCosmo() {
             const display = document.getElementById('cosmo-val');
+            const targetDiv = document.getElementById('target-display');
+            const targetVal = document.getElementById('target-val');
             const status = document.getElementById('status');
+            
             const now = new Date();
             const min = now.getMinutes();
             const sec = now.getSeconds();
 
-            status.innerText = "CALCUL SUR T+" + sec + "s...";
+            status.innerText = "CALCUL DES CYCLES...";
             display.style.opacity = "0.3";
 
             setTimeout(() => {
-                // Logique basée sur le temps : parité des secondes et ajout des minutes
-                let base = (sec % 2 === 0) ? 2.55 : 1.45;
-                let calculation = (base + (min / 12) + (sec / 18)).toFixed(2);
+                // 1. Calcul du Multiplicateur (Basé sur le temps)
+                let base = (sec % 2 === 0) ? 2.60 : 1.55;
+                let calculation = (base + (min / 10) + (sec / 20)).toFixed(2);
+                if (parseFloat(calculation) < 2.10) calculation = (parseFloat(calculation) + 2.25).toFixed(2);
+
+                // 2. Calcul de l'Heure de Pari (Minutes et Secondes du tour prochain)
+                // On ajoute un délai logique (par exemple +1 minute et une seconde cible calculée)
+                let nextMin = (min + 1) % 60;
+                let targetSec = (sec + 15) % 60; // On conseille de parier 15s après le cycle actuel
                 
-                // Forcer une cote "Élevée" comme demandé
-                if (parseFloat(calculation) < 2.00) {
-                    calculation = (parseFloat(calculation) + 2.30).toFixed(2);
-                }
+                // Formatage propre
+                let h = now.getHours().toString().padStart(2, '0');
+                let m = nextMin.toString().padStart(2, '0');
+                let s = targetSec.toString().padStart(2, '0');
 
                 display.innerText = calculation + "x";
+                targetVal.innerText = `${h}:${m}:${s}`;
+                
                 display.style.opacity = "1";
-                status.innerText = "SIGNAL TEMPOREL DÉTECTÉ";
-            }, 600);
+                targetDiv.style.display = "block";
+                status.innerText = "SIGNAL CALCULÉ !";
+            }, 800);
         }
 
-        // --- ALGORITHME FOOT (BASÉ SUR LA PARITÉ DES MINUTES) ---
         function predictFoot() {
             const input = document.getElementById('foot-input').value.trim();
-            if(input.length < 3) return alert("ENTREZ LE MATCH !");
+            if(input.length < 3) return;
             const res = document.getElementById('foot-res');
-            const currentMin = new Date().getMinutes();
-            
+            const m = new Date().getMinutes();
             let teams = input.split(/vs|VS|-/);
             let t1 = teams[0].trim();
             let t2 = teams[1] ? teams[1].trim() : t1;
+            let win = (m % 2 === 0) ? t1 : t2;
 
-            // Logique : Minute paire gagne l'équipe 1, sinon équipe 2
-            let winName = (currentMin % 2 === 0) ? t1 : t2;
-
-            res.innerHTML = `
-                <div class="winner-box">
-                    <div style="font-size:10px; color:var(--blue); font-family:'Orbitron';">ANALYSE TERMINÉE</div>
-                    <div style="font-weight:bold; font-size:16px; margin:5px 0;">${t1.toUpperCase()} VS ${t2.toUpperCase()}</div>
-                    <div style="color:var(--green); font-size:20px; font-weight:bold; font-family:'Orbitron';">GAGNANT : ${winName.toUpperCase()}</div>
-                </div>`;
+            res.innerHTML = `<div style="margin-top:20px; padding:15px; border-left:4px solid var(--green); background:rgba(0,0,0,0.3); text-align:left;">
+                <div style="font-size:10px; color:var(--blue);">MATCH ANALYSÉ</div>
+                <div style="font-weight:bold; font-size:16px;">${t1} VS ${t2}</div>
+                <div style="color:var(--green); font-size:20px; font-weight:bold;">GAGNANT : ${win.toUpperCase()}</div>
+            </div>`;
         }
     </script>
 </body>
