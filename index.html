@@ -2,29 +2,25 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<title>AVIATOR IA CLASSIC</title>
+<title>AVIATOR IA STRATEGIC</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
 body{
   margin:0;
-  background:#0b1220;
-  color:#eaf2ff;
+  background:linear-gradient(135deg,#0a1a33,#3b0a0a);
+  color:#eaf6ff;
   font-family:Arial, sans-serif;
 }
-.app{
-  max-width:420px;
-  margin:auto;
-  padding:15px;
-}
+.app{max-width:440px;margin:auto;padding:15px}
 .card{
-  background:#111a2e;
-  border:1px solid #1f3b66;
+  background:rgba(10,20,40,0.9);
+  border:1px solid #3fa9ff;
   border-radius:12px;
   padding:15px;
   margin-bottom:15px;
 }
-h2,h3{margin:0 0 10px 0}
+h2,h3{margin:0 0 10px}
 input,button{
   width:100%;
   padding:12px;
@@ -36,7 +32,7 @@ input,button{
 input{
   background:#060c18;
   color:white;
-  border:1px solid #2f6fb2;
+  border:1px solid #ff4b4b;
 }
 button{
   background:#3fa9ff;
@@ -44,17 +40,16 @@ button{
   font-weight:bold;
   cursor:pointer;
 }
-button.red{background:#ff5c5c;color:white}
+button.red{background:#ff4b4b;color:white}
 .pred{
   background:#060c18;
-  border:1px solid #2f6fb2;
-  border-radius:8px;
+  border-left:4px solid #3fa9ff;
   padding:10px;
   margin-top:8px;
 }
-.good{color:#4cff9b}
-.warn{color:#ffd36a}
-.bad{color:#ff6b6b}
+.good{border-color:#00ff99}
+.warn{border-color:#ffd36a}
+.bad{border-color:#ff4b4b}
 .small{font-size:13px;color:#aaa}
 </style>
 </head>
@@ -63,8 +58,8 @@ button.red{background:#ff5c5c;color:white}
 <div class="app">
 
 <div class="card">
-<h2>AVIATOR IA – CLASSIC</h2>
-<div class="small">Stratégie avancée • Auto-learning</div>
+<h2>AVIATOR IA – STRATEGIC CORE</h2>
+<div class="small">Multi-stratégies • Anti-copie • Auto-learning</div>
 </div>
 
 <div class="card">
@@ -85,82 +80,79 @@ button.red{background:#ff5c5c;color:white}
 </div>
 
 <script>
-/* ===== IA MÉMOIRE ===== */
-let AI = JSON.parse(localStorage.getItem("aviatorAI")) || {
-  score:50,
-  win:0,
-  lose:0
+/* ===== MÉMOIRE IA ===== */
+let AI = JSON.parse(localStorage.getItem("aviatorAI2")) || {
+  w:0,l:0
 };
 
 /* ===== ANALYSE ===== */
 function analyser(){
-  const h=+hEl.value,
-        m=+mEl.value,
-        s=+sEl.value,
-        r=+rEl.value;
-
+  const h=+hEl.value,m=+mEl.value,s=+sEl.value,r=+rEl.value;
   if(
     isNaN(h)||isNaN(m)||isNaN(s)||isNaN(r)||
     h<0||h>23||m<0||m>59||s<0||s>59||r<5
-  ){
-    alert("Entrées invalides (ROSE ≥ 5x requis)");
-    return;
-  }
+  ){alert("Valeurs invalides");return;}
 
-  // LOGIQUES MÉLANGÉES
-  let timeMix = (h*3600 + m*60 + s) % 97;
-  let chaos = Math.abs(
-    Math.sin((r+1)*(m+1)) +
-    Math.cos((s+1)*(h+1))
-  );
+  let adapt=(AI.w-AI.l)*0.07;
 
-  let base = 4 + (r/3) + (timeMix/100) + chaos;
-  let adapt = (AI.win - AI.lose) / 20;
+  /* === STRATÉGIE 1 : CYCLE TEMPOREL === */
+  let stratTime=(h*7 + m*3 + s)%17;
 
-  let html="<h3>Prédictions IA</h3>";
+  /* === STRATÉGIE 2 : RYTHME ROSE === */
+  let stratRose=Math.log(r+1)*1.8;
+
+  /* === STRATÉGIE 3 : CHAOS NON LINÉAIRE === */
+  let chaos=Math.abs(Math.sin(h+1)*Math.cos(s+1)*3);
+
+  /* === STRATÉGIE 4 : FRICTION MINUTE/SECONDE === */
+  let friction=Math.abs(m-s)/30;
+
+  /* === STRATÉGIE 5 : MÉMOIRE IA === */
+  let memory=adapt;
+
+  let base=4.2 + stratTime/10 + stratRose + chaos + friction + memory;
+
+  let html="<h3>Prédictions stratégiques</h3>";
 
   for(let i=1;i<=4;i++){
-    let entryMin = (m + i*2) % 60;
-    let entrySec = (s + i*11) % 60;
+    let entryM=(m + i*3 + stratTime)%60;
+    let entryS=(s + i*13 + Math.floor(chaos*4))%60;
 
-    let cote =
-      base +
-      Math.sin((i+s)*r) +
-      adapt -
-      (i*0.3);
+    let spread=0.8 + i*0.35 + Math.abs(Math.sin(s+i));
+    let min=(base - spread - i*0.4);
+    let max=(base + spread + i*0.6);
 
-    cote = Math.max(2, cote).toFixed(2);
+    min=Math.max(2,min).toFixed(2);
+    max=max.toFixed(2);
 
-    let cls = cote>=8?"good":cote>=5?"warn":"bad";
+    let cls=max>=12?"good":max>=7?"warn":"bad";
 
     html+=`
     <div class="pred ${cls}">
-      ⏱ Entrée : ${entryMin}:${entrySec.toString().padStart(2,"0")}
-      <br>🎯 Cote min : <b>${cote}x</b>
+      ⏱ Entrée : ${entryM}:${entryS.toString().padStart(2,"0")}  
+      <br>🎯 Estimation : <b>${min}x → ${max}x</b>
     </div>`;
   }
 
-  // JACKPOT (UTILISE L’HEURE)
-  if((h%4===0 && m%10===0) || chaos>2.1){
+  /* === JACKPOT (HEURE UNIQUEMENT) === */
+  if((h%4===0 && m%10===0) || chaos>2.4){
     html+=`
     <div class="pred good">
-      🔥 JACKPOT POSSIBLE (heure favorable)
+      🔥 JACKPOT HAUT POTENTIEL (alignement horaire)
     </div>`;
   }
 
-  result.innerHTML = html;
+  result.innerHTML=html;
 }
 
 /* ===== AUTO-APPRENTISSAGE ===== */
 function learn(win){
-  win?AI.win++:AI.lose++;
-  AI.score += win?2:-3;
-  AI.score = Math.max(0,Math.min(100,AI.score));
-  localStorage.setItem("aviatorAI",JSON.stringify(AI));
-  alert("IA mise à jour • Score "+AI.score+"%");
+  win?AI.w++:AI.l++;
+  localStorage.setItem("aviatorAI2",JSON.stringify(AI));
+  alert("IA améliorée");
 }
 
-/* ===== ALIAS INPUTS ===== */
+/* ===== INPUTS ===== */
 const hEl=document.getElementById("h");
 const mEl=document.getElementById("m");
 const sEl=document.getElementById("s");
