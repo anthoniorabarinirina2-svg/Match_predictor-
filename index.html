@@ -1,196 +1,171 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ADALABE AI - TIME SCANNER</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
-    <style>
-        :root { 
-            --pink: #ff007f; --blue: #00d2ff; --bg: #05070a; 
-            --card: rgba(20, 24, 30, 0.95); --gold: #f0b90b; 
-            --green: #00ff88; --shadow: 0 0 20px rgba(255, 0, 127, 0.4);
-        }
+<meta charset="UTF-8">
+<title>AVIATOR IA CLASSIC</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-        body { 
-            background: var(--bg); 
-            background-image: radial-gradient(circle at center, #1a0b16 0%, #05070a 100%);
-            color: white; font-family: 'Rajdhani', sans-serif; 
-            margin: 0; padding: 10px; display: flex; justify-content: center; min-height: 100vh;
-        }
-
-        .container { max-width: 420px; width: 100%; display: none; animation: fadeIn 0.5s ease; }
-
-        .header { 
-            display: flex; justify-content: space-between; align-items: center;
-            background: rgba(255, 255, 255, 0.05); padding: 12px;
-            border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.1); margin-bottom: 20px;
-        }
-        .clock-live { font-family: 'Orbitron'; font-size: 20px; color: var(--blue); text-shadow: 0 0 10px var(--blue); }
-
-        .tabs { display: flex; gap: 10px; margin-bottom: 20px; }
-        .tab-btn { 
-            flex: 1; padding: 14px; border: none; font-family: 'Orbitron'; font-size: 11px;
-            cursor: pointer; background: #1e2329; color: #666; font-weight: bold;
-            clip-path: polygon(10% 0, 100% 0, 90% 100%, 0% 100%); transition: 0.3s;
-        }
-        .tab-btn.active { background: var(--pink); color: white; box-shadow: var(--shadow); }
-
-        .section { 
-            background: var(--card); border-radius: 20px; padding: 30px; 
-            border: 1px solid #2a2f3a; position: relative; display: none;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
-        }
-        .section.active { display: block; }
-
-        /* BOX PREDICTION */
-        .prediction-box { 
-            background: rgba(0,0,0,0.4); border: 1px solid rgba(255, 0, 127, 0.3);
-            border-radius: 15px; margin: 15px 0; padding: 20px;
-        }
-        .prediction-val { 
-            font-family: 'Orbitron'; font-size: 55px; font-weight: bold; 
-            color: var(--pink); text-shadow: var(--shadow); margin: 5px 0;
-        }
-        .target-time {
-            font-family: 'Orbitron'; font-size: 18px; color: var(--green);
-            background: rgba(0, 255, 136, 0.1); padding: 10px; border-radius: 8px;
-            margin-top: 10px; border: 1px dashed var(--green);
-        }
-
-        .btn { 
-            width: 100%; padding: 18px; border: none; border-radius: 8px; 
-            font-family: 'Orbitron'; font-weight: bold; cursor: pointer; 
-            font-size: 14px; margin-top: 10px; text-transform: uppercase; transition: 0.2s;
-        }
-        .btn-pink { background: var(--pink); color: white; box-shadow: var(--shadow); }
-        .btn-blue { background: var(--blue); color: black; }
-
-        input { 
-            width: 100%; padding: 15px; margin-bottom: 15px; border-radius: 10px;
-            border: 1px solid #333; background: #000; color: var(--green);
-            font-family: 'Orbitron'; text-align: center; font-size: 16px; box-sizing: border-box;
-        }
-
-        #lock { position: fixed; inset: 0; background: var(--bg); z-index: 9999; display: flex; justify-content: center; align-items: center; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-    </style>
+<style>
+body{
+  margin:0;
+  background:#0b1220;
+  color:#eaf2ff;
+  font-family:Arial, sans-serif;
+}
+.app{
+  max-width:420px;
+  margin:auto;
+  padding:15px;
+}
+.card{
+  background:#111a2e;
+  border:1px solid #1f3b66;
+  border-radius:12px;
+  padding:15px;
+  margin-bottom:15px;
+}
+h2,h3{margin:0 0 10px 0}
+input,button{
+  width:100%;
+  padding:12px;
+  margin-top:8px;
+  border-radius:8px;
+  border:none;
+  font-size:16px;
+}
+input{
+  background:#060c18;
+  color:white;
+  border:1px solid #2f6fb2;
+}
+button{
+  background:#3fa9ff;
+  color:#001;
+  font-weight:bold;
+  cursor:pointer;
+}
+button.red{background:#ff5c5c;color:white}
+.pred{
+  background:#060c18;
+  border:1px solid #2f6fb2;
+  border-radius:8px;
+  padding:10px;
+  margin-top:8px;
+}
+.good{color:#4cff9b}
+.warn{color:#ffd36a}
+.bad{color:#ff6b6b}
+.small{font-size:13px;color:#aaa}
+</style>
 </head>
+
 <body>
+<div class="app">
 
-    <div id="lock">
-        <div style="background:var(--card); padding:40px; border-radius:25px; border:1px solid var(--gold); text-align:center; width:85%; max-width:350px;">
-            <h2 style="color:var(--gold); font-family:'Orbitron'; font-size: 14px;">SYSTEM AUTHENTICATION</h2>
-            <input type="password" id="pass" placeholder="ACCESS CODE">
-            <button class="btn btn-pink" style="background:var(--gold); color:black;" onclick="unlock()">LOGIN</button>
-        </div>
-    </div>
+<div class="card">
+<h2>AVIATOR IA – CLASSIC</h2>
+<div class="small">Stratégie avancée • Auto-learning</div>
+</div>
 
-    <div id="app" class="container">
-        <div class="header">
-            <div style="font-size: 10px; color: var(--gold); font-family: 'Orbitron';">ADALABE PRO V6</div>
-            <div class="clock-live" id="clock">00:00:00</div>
-        </div>
-        
-        <div class="tabs">
-            <button class="tab-btn active" id="tab1" onclick="switchTab(1)">COSMOX AI</button>
-            <button class="tab-btn" id="tab2" onclick="switchTab(2)">FOOT SCAN</button>
-        </div>
+<div class="card">
+<input id="h" type="number" placeholder="Heure (0–23)">
+<input id="m" type="number" placeholder="Minute (0–59)">
+<input id="s" type="number" placeholder="Seconde (0–59)">
+<input id="r" type="number" step="0.01" placeholder="Dernier ROSE (≥5x)">
+<button onclick="analyser()">ANALYSER</button>
+</div>
 
-        <div id="sec1" class="section active">
-            <p style="font-size: 11px; color: #888; font-family: 'Orbitron'; margin: 0;">ANALYSE DU CYCLE PROCHAIN</p>
-            <div class="prediction-box">
-                <div id="status" style="font-size:10px; color:var(--gold); margin-bottom:10px;">PRÊT POUR LE SCAN</div>
-                <div class="prediction-val" id="cosmo-val">--.--x</div>
-                <div id="target-display" style="display:none;">
-                    <div style="font-size:10px; color:#fff; margin-bottom:5px;">HEURE DE PARI CONSEILLÉE :</div>
-                    <div class="target-time" id="target-val">00:00:00</div>
-                </div>
-            </div>
-            <button class="btn btn-pink" onclick="predictCosmo()">GÉNÉRER SIGNAL + HEURE</button>
-        </div>
+<div class="card" id="result"></div>
 
-        <div id="sec2" class="section">
-            <input type="text" id="foot-input" placeholder="ÉQUIPE 1 VS ÉQUIPE 2">
-            <button class="btn btn-blue" onclick="predictFoot()">DÉDUIRE GAGNANT</button>
-            <div id="foot-res"></div>
-        </div>
-    </div>
+<div class="card">
+<button onclick="learn(true)">GAGNÉ ✅</button>
+<button class="red" onclick="learn(false)">PERDU ❌</button>
+</div>
 
-    <script>
-        setInterval(() => {
-            document.getElementById('clock').innerText = new Date().toLocaleTimeString('fr-FR');
-        }, 1000);
+</div>
 
-        function unlock() {
-            if(document.getElementById('pass').value.toLowerCase().trim() === 'adalabe') {
-                document.getElementById('lock').style.display = 'none';
-                document.getElementById('app').style.display = 'block';
-            } else { alert("CODE INCORRECT"); }
-        }
+<script>
+/* ===== IA MÉMOIRE ===== */
+let AI = JSON.parse(localStorage.getItem("aviatorAI")) || {
+  score:50,
+  win:0,
+  lose:0
+};
 
-        function switchTab(n) {
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-            document.getElementById('tab'+n).classList.add('active');
-            document.getElementById('sec'+n).classList.add('active');
-        }
+/* ===== ANALYSE ===== */
+function analyser(){
+  const h=+hEl.value,
+        m=+mEl.value,
+        s=+sEl.value,
+        r=+rEl.value;
 
-        // --- ALGORITHME TEMPOREL AVANCÉ ---
-        function predictCosmo() {
-            const display = document.getElementById('cosmo-val');
-            const targetDiv = document.getElementById('target-display');
-            const targetVal = document.getElementById('target-val');
-            const status = document.getElementById('status');
-            
-            const now = new Date();
-            const min = now.getMinutes();
-            const sec = now.getSeconds();
+  if(
+    isNaN(h)||isNaN(m)||isNaN(s)||isNaN(r)||
+    h<0||h>23||m<0||m>59||s<0||s>59||r<5
+  ){
+    alert("Entrées invalides (ROSE ≥ 5x requis)");
+    return;
+  }
 
-            status.innerText = "CALCUL DES CYCLES...";
-            display.style.opacity = "0.3";
+  // LOGIQUES MÉLANGÉES
+  let timeMix = (h*3600 + m*60 + s) % 97;
+  let chaos = Math.abs(
+    Math.sin((r+1)*(m+1)) +
+    Math.cos((s+1)*(h+1))
+  );
 
-            setTimeout(() => {
-                // 1. Calcul du Multiplicateur (Basé sur le temps)
-                let base = (sec % 2 === 0) ? 2.60 : 1.55;
-                let calculation = (base + (min / 10) + (sec / 20)).toFixed(2);
-                if (parseFloat(calculation) < 2.10) calculation = (parseFloat(calculation) + 2.25).toFixed(2);
+  let base = 4 + (r/3) + (timeMix/100) + chaos;
+  let adapt = (AI.win - AI.lose) / 20;
 
-                // 2. Calcul de l'Heure de Pari (Minutes et Secondes du tour prochain)
-                // On ajoute un délai logique (par exemple +1 minute et une seconde cible calculée)
-                let nextMin = (min + 1) % 60;
-                let targetSec = (sec + 15) % 60; // On conseille de parier 15s après le cycle actuel
-                
-                // Formatage propre
-                let h = now.getHours().toString().padStart(2, '0');
-                let m = nextMin.toString().padStart(2, '0');
-                let s = targetSec.toString().padStart(2, '0');
+  let html="<h3>Prédictions IA</h3>";
 
-                display.innerText = calculation + "x";
-                targetVal.innerText = `${h}:${m}:${s}`;
-                
-                display.style.opacity = "1";
-                targetDiv.style.display = "block";
-                status.innerText = "SIGNAL CALCULÉ !";
-            }, 800);
-        }
+  for(let i=1;i<=4;i++){
+    let entryMin = (m + i*2) % 60;
+    let entrySec = (s + i*11) % 60;
 
-        function predictFoot() {
-            const input = document.getElementById('foot-input').value.trim();
-            if(input.length < 3) return;
-            const res = document.getElementById('foot-res');
-            const m = new Date().getMinutes();
-            let teams = input.split(/vs|VS|-/);
-            let t1 = teams[0].trim();
-            let t2 = teams[1] ? teams[1].trim() : t1;
-            let win = (m % 2 === 0) ? t1 : t2;
+    let cote =
+      base +
+      Math.sin((i+s)*r) +
+      adapt -
+      (i*0.3);
 
-            res.innerHTML = `<div style="margin-top:20px; padding:15px; border-left:4px solid var(--green); background:rgba(0,0,0,0.3); text-align:left;">
-                <div style="font-size:10px; color:var(--blue);">MATCH ANALYSÉ</div>
-                <div style="font-weight:bold; font-size:16px;">${t1} VS ${t2}</div>
-                <div style="color:var(--green); font-size:20px; font-weight:bold;">GAGNANT : ${win.toUpperCase()}</div>
-            </div>`;
-        }
-    </script>
+    cote = Math.max(2, cote).toFixed(2);
+
+    let cls = cote>=8?"good":cote>=5?"warn":"bad";
+
+    html+=`
+    <div class="pred ${cls}">
+      ⏱ Entrée : ${entryMin}:${entrySec.toString().padStart(2,"0")}
+      <br>🎯 Cote min : <b>${cote}x</b>
+    </div>`;
+  }
+
+  // JACKPOT (UTILISE L’HEURE)
+  if((h%4===0 && m%10===0) || chaos>2.1){
+    html+=`
+    <div class="pred good">
+      🔥 JACKPOT POSSIBLE (heure favorable)
+    </div>`;
+  }
+
+  result.innerHTML = html;
+}
+
+/* ===== AUTO-APPRENTISSAGE ===== */
+function learn(win){
+  win?AI.win++:AI.lose++;
+  AI.score += win?2:-3;
+  AI.score = Math.max(0,Math.min(100,AI.score));
+  localStorage.setItem("aviatorAI",JSON.stringify(AI));
+  alert("IA mise à jour • Score "+AI.score+"%");
+}
+
+/* ===== ALIAS INPUTS ===== */
+const hEl=document.getElementById("h");
+const mEl=document.getElementById("m");
+const sEl=document.getElementById("s");
+const rEl=document.getElementById("r");
+</script>
+
 </body>
 </html>
